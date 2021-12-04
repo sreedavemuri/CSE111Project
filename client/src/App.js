@@ -3,7 +3,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <div className="Information">
+      <div className="Tables">
         <button class="button">Agents</button>
         <button class="button">Weapons</button>
         <button class="button">Roles</button>

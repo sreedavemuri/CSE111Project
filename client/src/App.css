@@ -4,7 +4,7 @@
   justify-content: center;
 }
 
-.Information button {
+.Tables button {
   background-color: #DC3B4D;
   border: 2px solid #DC3B4D;
   color: white;
@@ -16,7 +16,7 @@
   transition-duration: 0.4s;
 }
 
-.Information button:hover{
+.Tables button:hover{
   cursor: pointer;
   background-color:#FA4454;
 }
