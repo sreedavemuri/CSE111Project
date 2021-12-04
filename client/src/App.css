@@ -4,6 +4,12 @@
   justify-content: center;
 }
 
+.App h1 {
+  background-color: black;
+  color: white;
+  padding: 15px 32px;
+}
+
 .Tables button {
   background-color: #DC3B4D;
   border: 2px solid #DC3B4D;
@@ -19,4 +25,14 @@
 .Tables button:hover{
   cursor: pointer;
   background-color:#FA4454;
+}
+
+.Dropdown {
+  display: block;
+  height: 30px; 
+  float: left;
+  position: relative;
+  margin: 0 9px 0 0;
+  padding: 0;
+  width: 140px;
 }
