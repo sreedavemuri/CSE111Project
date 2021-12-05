@@ -62,7 +62,7 @@ def inserttuple():
                 VALUES ({},{},{},{},{}.{})""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
             cur.execute(insagent)
 
-            if count != 6:
+            if count <= 6:
                 inskda = """INSERT INTO kda(kda_agentkey,kda_mapkey,kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr) 
                     VALUES ({},{},0,0,0,0,0,0,0)""".format(a_agentkey, count)
                 cur.execute(inskda)
