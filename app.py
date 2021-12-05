@@ -37,20 +37,37 @@ def roles():
     return render_template('roles.html')
 
 @app.route('/controller', methods=['GET', 'POST'])
-def controller():
-    return render_template('controller.html')
+def searchController():
+    if request.method == 'POST':
+        form = request.form
+        search_agent = form['search_agent']
+        #ilter_value = form['filter']
+
+        with sqlite3.connect(db_path) as con:
+            cur = con.cursor()
+            cur.execute("""
+                SELECT a_name, a_gender, a_race, o_name
+                FROM agents, origin
+                WHERE
+                    a_name LIKE '%{}%' AND
+                    a_originkey = o_originkey AND
+                    a_rolekey = 1;""".format(search_agent))
+            results = cur.fetchall()
+        return render_template('controller.html', results=results)
+    else:
+        return render_template('controller.html')
 
 @app.route('/duelist', methods=['GET', 'POST'])
 def duelist():
-    return render_template('duelist.html')
+        return render_template('duelist.html')
 
 @app.route('/initiator', methods=['GET', 'POST'])
 def initiator():
-    return render_template('initiator.html')
+        return render_template('initiator.html')
 
 @app.route('/sentinel', methods=['GET', 'POST'])
 def sentinel():
-    return render_template('sentinel.html')
+        return render_template('sentinel.html')
 
 @app.route('/IUD', methods=['GET', 'POST'])
 def IUD():
@@ -60,7 +77,6 @@ def IUD():
 @app.route('/insert', methods=['GET', 'POST'])
 def insertTuple():
     form = InsertTuple()
-
     count = 1
 
     if form.validate_on_submit():
@@ -82,7 +98,6 @@ def insertTuple():
                 inskda = """INSERT INTO kda(kda_agentkey,kda_mapkey,kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr) 
                     VALUES ({},{},0,0,0,0,0,0,0)""".format(a_agentkey, count)
                 cur.execute(inskda)
-
                 count += 1
 
     return render_template('insert.html', form=form)
@@ -93,3 +108,4 @@ def updateTuple():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
