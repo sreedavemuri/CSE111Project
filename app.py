@@ -27,7 +27,6 @@ class InsertTuple(FlaskForm):
     a_race = StringField(validators=[InputRequired(), Length(min=1, max=10)], render_kw={"placeholder": "a_race"})
     submit = SubmitField('Submit')
 
-
 #-------------------------------- @app.route(____) --------------------------------#
 @app.route('/')
 def dashboard():
@@ -225,10 +224,6 @@ def insertTuple():
 @app.route('/update', methods=['GET', 'POST'])
 def updateTuple():
     return render_template('update.html')
-
-@app.route('/delete', methods=['GET', 'POST'])
-def deleteTuple():
-    return render_template('delete.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
