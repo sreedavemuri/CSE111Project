@@ -1,11 +1,11 @@
 import sqlite3
-from sqlite3 import Error
 import os.path
-from flask import Flask, render_template, url_for, redirect, request, session
+from flask import Flask, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField
-from wtforms.validators import InputRequired, Length
+from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bootstrap import Bootstrap
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -211,7 +211,7 @@ def insertTuple():
             cur = conn.cursor()
 
             insagent =  """INSERT INTO agents(a_agentkey,a_name,a_rolekey,a_originkey,a_gender,a_race) 
-                VALUES ({},{},{},{},{}.{})""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
+                VALUES ({},'{}',{},{},'{}','{}')""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
             cur.execute(insagent)
 
             if count <= 6:
@@ -225,6 +225,10 @@ def insertTuple():
 @app.route('/update', methods=['GET', 'POST'])
 def updateTuple():
     return render_template('update.html')
+
+@app.route('/delete', methods=['GET', 'POST'])
+def deleteTuple():
+    return render_template('delete.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
