@@ -35,25 +35,41 @@ def dashboard():
 @app.route('/roles', methods=['GET', 'POST'])
 def roles():
     return render_template('roles.html')
-
+        
 @app.route('/controller', methods=['GET', 'POST'])
 def searchController():
     if request.method == 'POST':
         form = request.form
         search_agent = form['search_agent']
-        #ilter_value = form['filter']
+        search_kda = form['search_kda']
+        map_filter = form['filter_map']
 
-        with sqlite3.connect(db_path) as con:
-            cur = con.cursor()
-            cur.execute("""
-                SELECT a_name, a_gender, a_race, o_name
-                FROM agents, origin
-                WHERE
-                    a_name LIKE '%{}%' AND
-                    a_originkey = o_originkey AND
-                    a_rolekey = 1;""".format(search_agent))
-            results = cur.fetchall()
-        return render_template('controller.html', results=results)
+        if request.form['submit'] == 'Search Agent':
+            with sqlite3.connect(db_path) as con:
+                cur = con.cursor()
+                cur.execute("""
+                    SELECT a_agentkey, a_name, a_gender, a_race, o_name
+                    FROM agents, origin
+                    WHERE
+                        a_name LIKE '%{}%' AND
+                        a_originkey = o_originkey AND
+                        a_rolekey = 1;""".format(search_agent))
+                res1 = cur.fetchall()
+            return render_template('controller.html', res1=res1)
+        
+        if request.form['submit'] == 'Search KDA':
+            with sqlite3.connect(db_path) as con:
+                cur = con.cursor()
+                cur.execute("""
+                    SELECT a_name, kda_kill, kda_death, kda_assist, kda_winrate, kda_atkwin, kda_defwin
+                    FROM kda, agents, maps
+                    WHERE
+                        a_agentkey = kda_agentkey AND
+                        kda_agentkey = {} AND
+                        kda_mapkey = m_mapkey AND
+                        m_mapkey = {};""".format(search_kda,map_filter))
+                res2 = cur.fetchall()
+            return render_template('controller.html', res2=res2)
     else:
         return render_template('controller.html')
 
