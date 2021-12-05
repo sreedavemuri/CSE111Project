@@ -36,13 +36,29 @@ def dashboard():
 def roles():
     return render_template('roles.html')
 
+@app.route('/controller', methods=['GET', 'POST'])
+def controller():
+    return render_template('controller.html')
+
+@app.route('/duelist', methods=['GET', 'POST'])
+def duelist():
+    return render_template('duelist.html')
+
+@app.route('/initiator', methods=['GET', 'POST'])
+def initiator():
+    return render_template('initiator.html')
+
+@app.route('/sentinel', methods=['GET', 'POST'])
+def sentinel():
+    return render_template('sentinel.html')
+
 @app.route('/IUD', methods=['GET', 'POST'])
 def IUD():
     return render_template('IUD.html')
 
 # Adding a new agent would also need to add info to KDA stats for each map (NEW = 0 stats for now)
 @app.route('/insert', methods=['GET', 'POST'])
-def inserttuple():
+def insertTuple():
     form = InsertTuple()
 
     count = 1
@@ -71,6 +87,9 @@ def inserttuple():
 
     return render_template('insert.html', form=form)
 
+@app.route('/update', methods=['GET', 'POST'])
+def updateTuple():
+    return render_template('update.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
