@@ -1,4 +1,11 @@
 --SQLite
+DROP TABLE agents;
+DROP TABLE origin;
+DROP TABLE roles;
+DROP TABLE weapons;
+DROP TABLE kda;
+DROP TABLE maps;
+
 CREATE TABLE agents (
     a_agentkey decimal(2,0) not null,
     a_name char(10) not null,
@@ -56,16 +63,6 @@ CREATE TABLE maps (
     m_description char(100) not null
 );
 
-CREATE TABLE maprank (
-    mr_mapkey decimal(1,0) not null,
-    mr_iron decimal(3,2) not null,
-    mr_bronze decimal(3,2) not null,
-    mr_silver decimal(3,2) not null,
-    mr_gold decimal(3,2) not null,
-    mr_platinum decimal(3,2) not null,
-    mr_diamond decimal(3,2) not null
-);
-
 --SQLite Bulk Loading
 .mode "csv"
 .separator ","
@@ -78,6 +75,5 @@ CREATE TABLE maprank (
 .import '| tail -n +2 data/weapons.csv' weapons
 .import '| tail -n +2 data/kda.csv' kda
 .import '| tail -n +2 data/maps.csv' maps
-.import '| tail -n +2 data/maprank.csv' maprank
 
 
