@@ -115,6 +115,40 @@ def searchDuelist():
 
 @app.route('/initiator', methods=['GET', 'POST'])
 def initiator():
+    if request.method == 'POST':
+        form = request.form
+        search_agent = form['search_agent']
+        search_kda = form['search_kda']
+        map_filter = form['filter_map']
+
+        if request.form['submit'] == 'Search Agent':
+            with sqlite3.connect(db_path) as con:
+                cur = con.cursor()
+                cur.execute("""
+                    SELECT a_agentkey, a_name, a_gender, a_race, o_name
+                    FROM agents, origin
+                    WHERE
+                        a_name LIKE '%{}%' AND
+                        a_originkey = o_originkey AND
+                        a_rolekey = 3;""".format(search_agent))
+                res1 = cur.fetchall()
+            return render_template('initiator.html', res1=res1)
+        
+        if request.form['submit'] == 'Search KDA':
+            with sqlite3.connect(db_path) as con:
+                cur = con.cursor()
+                cur.execute("""
+                    SELECT a_name, kda_kill, kda_death, kda_assist, kda_winrate, kda_atkwin, kda_defwin
+                    FROM kda, agents, maps
+                    WHERE
+                        a_rolekey = 3 AND
+                        a_agentkey = kda_agentkey AND
+                        kda_agentkey = {} AND
+                        kda_mapkey = m_mapkey AND
+                        m_mapkey = {};""".format(search_kda,map_filter))
+                res2 = cur.fetchall()
+            return render_template('initiator.html', res2=res2)
+    else:
         return render_template('initiator.html')
 
 @app.route('/sentinel', methods=['GET', 'POST'])
