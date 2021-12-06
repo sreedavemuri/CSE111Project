@@ -24,20 +24,30 @@
     <h2>Delete Roles</h2>
     <h3>Is there a weapon that's no longer suitable for certain roles? Delete the dataset here!</h3>
 
-    <form method="POST" action="">
+    List of Roles:
+    <ol>
+        <li>Controller</li>
+        <li>Duelist</li>
+        <li>Initiator</li>
+        <li>Sentinel</li>
+    </ol>
+
+    <br>
+
+    <form method="POST" formaction="/deleteR">
+        {{ form.hidden_tag() }}
+
         Role: 
-        <select>
-            <option value="">--Select--</option>
-            <option value="1">Controller</option>
-            <option value="2">Duelist</option>
-            <option value="3">Initiator</option>
-            <option value="4">Sentinel</option>
-        </select>
+        {{ form.r_rolekey}}
+        
+        <br>
 
         Weaponkey:
-        <input type="number" autofocus="autofocus" name="search_weaponkey">
+        {{ form.r_weaponkey}}
 
-        <input type="submit" name="submit" value="Delete Role">
+        <br>
+
+        {{ form.submit }}
     </form>
 </body>
 
