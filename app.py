@@ -26,6 +26,18 @@ class InsertAgent(FlaskForm):
     a_race = StringField(validators=[InputRequired(), Length(min=1, max=10)], render_kw={"placeholder": "a_race"})
     submit = SubmitField('Submit')
 
+class UpdateKDA(FlaskForm):
+    kda_agentkey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_agentkey"})
+    kda_mapkey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_mapkey"})
+    kda_kill = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_kill"})
+    kda_death = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_death"})
+    kda_assist = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_assist"})    
+    kda_winrate = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_winrate"})
+    kda_atkwin = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_atkwin"})
+    kda_defwin = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_defwin"})
+    kda_agentpr = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "kda_agentpr"})
+    submit = SubmitField('Submit')
+
 class DeleteAgent(FlaskForm):
     a_name = StringField(validators=[InputRequired(), Length(min=1, max=20)], render_kw={"placeholder": "a_name"})
     submit = SubmitField('Submit')
@@ -241,12 +253,12 @@ def insertAgent():
             cur = conn.cursor()
 
             insagent =  """INSERT INTO agents(a_agentkey,a_name,a_rolekey,a_originkey,a_gender,a_race) 
-                VALUES ({},'{}',{},{},'{}','{}')""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
+                VALUES ({},'{}',{},{},'{}','{}');""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
             cur.execute(insagent)
 
             if count <= 6:
                 inskda = """INSERT INTO kda(kda_agentkey,kda_mapkey,kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr) 
-                    VALUES ({},{},0,0,0,0,0,0,0)""".format(a_agentkey, count)
+                    VALUES ({},{},0,0,0,0,0,0,0);""".format(a_agentkey, count)
                 cur.execute(inskda)
                 count += 1
         
@@ -255,7 +267,33 @@ def insertAgent():
 
 @app.route('/update', methods=['GET', 'POST'])
 def updateTuple():
-    return render_template('update.html')
+    form = UpdateKDA()
+
+    if form.validate_on_submit():
+        kda_agentkey = form.kda_agentkey.data
+        kda_mapkey = form.kda_mapkey.data
+        kda_kill = form.kda_kill.data
+        kda_death = form.kda_death.data
+        kda_assist = form.kda_assist.data
+        kda_winrate = form.kda_winrate.data
+        kda_atkwin = form.kda_atkwin.data
+        kda_defwin = form.kda_defwin.data
+        kda_agentpr = form.kda_agentpr.data
+    
+        with sqlite3.connect(db_path) as conn:
+            cur = conn.cursor()
+
+            updkda = """
+                UPDATE kda
+                SET kda_kill = {}, kda_death = {}, kda_assist = {}, kda_winrate = {}, kda_atkwin = {}, kda_defwin = {}, kda_agentpr = {}
+                WHERE 
+                    kda_agentkey = {} AND
+                    kda_mapkey = {};
+                """.format(kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr,kda_agentkey,kda_mapkey)
+            cur.execute(updkda)
+
+        return redirect(url_for('roles'))
+    return render_template('update.html', form=form)
 
 @app.route('/deleteA', methods=['GET', 'POST'])
 def deleteAgent():
