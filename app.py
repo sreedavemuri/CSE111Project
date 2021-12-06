@@ -2,10 +2,9 @@ import sqlite3
 import os.path
 from flask import Flask, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField
-from wtforms.validators import InputRequired, Length, ValidationError
+from wtforms.validators import InputRequired, Length
 from flask_bootstrap import Bootstrap
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -250,7 +249,8 @@ def insertAgent():
                     VALUES ({},{},0,0,0,0,0,0,0)""".format(a_agentkey, count)
                 cur.execute(inskda)
                 count += 1
-
+        
+        return redirect(url_for('roles'))
     return render_template('insert.html', form=form)
 
 @app.route('/update', methods=['GET', 'POST'])
