@@ -31,6 +31,11 @@ class DeleteAgent(FlaskForm):
     a_name = StringField(validators=[InputRequired(), Length(min=1, max=20)], render_kw={"placeholder": "a_name"})
     submit = SubmitField('Submit')
 
+class DeleteRoles(FlaskForm):
+    r_rolekey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "r_rolekey"})
+    r_weaponkey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "r_weaponkey"})
+    submit = SubmitField('Submit')
+
 #-------------------------------- @app.route(____) --------------------------------#
 @app.route('/')
 def dashboard():
@@ -39,6 +44,10 @@ def dashboard():
 @app.route('/roles', methods=['GET', 'POST'])
 def roles():
     return render_template('roles.html')
+
+@app.route('/weapons', methods=['GET', 'POST'])
+def weapons():
+    return render_template('weapons.html')
         
 @app.route('/controller', methods=['GET', 'POST'])
 def searchController():
@@ -243,6 +252,24 @@ def deleteAgent():
         return redirect(url_for('roles'))
 
     return render_template('deleteA.html', form=form)
+
+@app.route('/deleteR', methods=['GET', 'POST'])
+def deleteRoles():
+    form = DeleteRoles()
+    r_rolekey = form.r_rolekey.data
+    r_weaponkey = form.r_weaponkey.data
+
+    if form.validate_on_submit():
+        with sqlite3.connect(db_path) as con:
+            cur = con.cursor()
+            cur.execute("""
+            DELETE FROM roles 
+            WHERE 
+                r_rolekey = {} AND
+                r_weaponkey = {};""".format(r_rolekey, r_weaponkey))
+        return redirect(url_for('roles'))
+
+    return render_template('deleteR.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
