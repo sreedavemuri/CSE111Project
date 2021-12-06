@@ -8,6 +8,12 @@
         padding: 15px;
         font-size: 40px;
     }
+
+    table, th, td {
+        border: 1px solid black;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 </style>
 
 <head>
@@ -38,12 +44,12 @@
         {{ form.hidden_tag() }}
 
         Role: 
-        {{ form.r_rolekey}}
+        {{ form.r_rolekey }}
         
         <br>
 
         Weaponkey:
-        {{ form.r_weaponkey}}
+        {{ form.r_weaponkey }}
 
         <br>
 
