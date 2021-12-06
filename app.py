@@ -18,13 +18,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tpch.sqlite'
 app.config['SECRET_KEY'] = 'secretkey'
 
 #------------------------------ class ____(FlaskForm) ------------------------------#
-class InsertTuple(FlaskForm):
+class InsertAgent(FlaskForm):
     a_agentkey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "a_agentkey"})
     a_name = StringField(validators=[InputRequired(), Length(min=1, max=20)], render_kw={"placeholder": "a_name"})
     a_rolekey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "a_rolekey"})
     a_originkey = IntegerField(validators=[InputRequired()], render_kw={"placeholder": "a_originkey"})
     a_gender = StringField(validators=[InputRequired(), Length(min=1, max=10)], render_kw={"placeholder": "a_gender"})
     a_race = StringField(validators=[InputRequired(), Length(min=1, max=10)], render_kw={"placeholder": "a_race"})
+    submit = SubmitField('Submit')
+
+class DeleteAgent(FlaskForm):
+    a_name = StringField(validators=[InputRequired(), Length(min=1, max=20)], render_kw={"placeholder": "a_name"})
     submit = SubmitField('Submit')
 
 #-------------------------------- @app.route(____) --------------------------------#
@@ -194,8 +198,8 @@ def IUD():
 
 # Adding a new agent would also need to add info to KDA stats for each map (NEW = 0 stats for now)
 @app.route('/insert', methods=['GET', 'POST'])
-def insertTuple():
-    form = InsertTuple()
+def insertAgent():
+    form = InsertAgent()
     count = 1
 
     if form.validate_on_submit():
@@ -224,6 +228,21 @@ def insertTuple():
 @app.route('/update', methods=['GET', 'POST'])
 def updateTuple():
     return render_template('update.html')
+
+@app.route('/deleteA', methods=['GET', 'POST'])
+def deleteAgent():
+    form = DeleteAgent()
+    a_name = form.a_name.data
+
+    if form.validate_on_submit():
+        with sqlite3.connect(db_path) as con:
+            cur = con.cursor()
+            cur.execute("""
+            DELETE FROM agents 
+            WHERE a_name = '{}';""".format(a_name))
+        return redirect(url_for('roles'))
+
+    return render_template('deleteA.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
