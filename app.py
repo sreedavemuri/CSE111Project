@@ -47,7 +47,27 @@ def roles():
 
 @app.route('/weapons', methods=['GET', 'POST'])
 def weapons():
-    return render_template('weapons.html')
+    if request.method == 'POST':
+        form = request.form
+        role_pick = form['role_pick']
+        weapon_filter = form['filter_weapon']
+        num_stat = form['num_stat']
+
+        if request.form['submit'] == 'Search Weapon':
+            with sqlite3.connect(db_path) as con:
+                cur = con.cursor()
+                cur.execute("""
+                    SELECT *
+                    FROM weapons
+                    INNER JOIN roles ON r_weaponkey = w_weaponkey
+                    WHERE
+                        r_rolekey = {} AND
+                        {} > {};""".format(role_pick, weapon_filter, num_stat)) 
+                res = cur.fetchall()
+
+        return render_template('weapons.html', res=res)
+    else:
+        return render_template('weapons.html')
         
 @app.route('/controller', methods=['GET', 'POST'])
 def searchController():
@@ -205,7 +225,6 @@ def sentinel():
 def IUD():
     return render_template('IUD.html')
 
-# Adding a new agent would also need to add info to KDA stats for each map (NEW = 0 stats for now)
 @app.route('/insert', methods=['GET', 'POST'])
 def insertAgent():
     form = InsertAgent()

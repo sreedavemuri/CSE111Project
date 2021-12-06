@@ -20,7 +20,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controller</title>
+    <title>Weapons</title>
 </head>
 
 <body>
@@ -28,6 +28,82 @@
     <a href="{{'roles'}}">Return to Dashboard</a>
     <h2>View Weapons</h2>
 
+    <form method = "POST">
+        Filter Role by:
+        <select name="role_pick" formaction = "/weapons">
+            <option value="">--Select--</option>
+            <option value="1">Controller</option>
+            <option value="2">Duelist</option>
+            <option value="3">Initiator</option>
+            <option value="4">Sentinel</option>
+        </select>
+
+        <br>
+
+        Filter Weapon by:
+        <select name="filter_weapon" formaction = "/weapons">
+            <option value="">--Select--</option>
+            <option value="w_price">Price</option>
+            <option value="w_firerate">Firerate</option>
+            <option value="w_headdmg_close">Head Damage (Close)</option>
+            <option value="w_bodydmg_close">Body Damage (Close)</option>
+            <option value="w_legdmg_close">Leg Damage (Close)</option>
+            <option value="w_headdmg_med">Head Damage (Mid)</option>
+            <option value="w_bodydmg_med">Body Damage (Mid)</option>
+            <option value="w_legdmg_med">Leg Damage (Mid)</option>
+            <option value="w_headdmg_far">Head Damage (Far)</option>
+            <option value="w_bodydmg_far">Body Damage (Far)</option>
+            <option value="w_legdmg_far">Leg Damage (Far)</option>
+        </select>
+
+        &gt
+
+        <input type="number" autofocus="autofocus" name="num_stat">
+        <input type="submit" name="submit" value="Search Weapon">
+    </form>
+
+    <br><br>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: left;">Weaponkey</th>
+                <th style="text-align: left;">Name</th>
+                <th style="text-align: left;">Type</th>
+                <th style="text-align: left;">Price</th>
+                <th style="text-align: left;">Firerate</th>
+                <th style="text-align: left;">Head Damage (Close)</th>
+                <th style="text-align: left;">Body Damage (Close)</th>
+                <th style="text-align: left;">Leg Damage (Close)</th>
+                <th style="text-align: left;">Head Damage (Mid)</th>
+                <th style="text-align: left;">Body Damage (Mid)</th>
+                <th style="text-align: left;">Leg Damage (Mid)</th>
+                <th style="text-align: left;">Head Damage (Far)</th>
+                <th style="text-align: left;">Body Damage (Far)</th>
+                <th style="text-align: left;">Leg Damage (Far)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in res %}
+            <tr>
+                <td>{{item[0]}}</td>
+                <td>{{item[1]}}</td>
+                <td>{{item[2]}}</td>
+                <td>{{item[3]}}</td>
+                <td>{{item[4]}}</td>
+                <td>{{item[5]}}</td>
+                <td>{{item[6]}}</td>
+                <td>{{item[7]}}</td>
+                <td>{{item[8]}}</td>
+                <td>{{item[9]}}</td>
+                <td>{{item[10]}}</td>
+                <td>{{item[11]}}</td>
+                <td>{{item[12]}}</td>
+                <td>{{item[13]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     
 </body>
 
