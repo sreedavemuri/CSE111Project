@@ -256,7 +256,7 @@ def insertAgent():
                 VALUES ({},'{}',{},{},'{}','{}');""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
             cur.execute(insagent)
 
-            if count <= 6:
+            while count <= 6:
                 inskda = """INSERT INTO kda(kda_agentkey,kda_mapkey,kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr) 
                     VALUES ({},{},0,0,0,0,0,0,0);""".format(a_agentkey, count)
                 cur.execute(inskda)
@@ -304,10 +304,20 @@ def deleteAgent():
         with sqlite3.connect(db_path) as con:
             cur = con.cursor()
             cur.execute("""
-            DELETE FROM agents 
-            WHERE a_name = '{}';""".format(a_name))
-        return redirect(url_for('roles'))
+                DELETE FROM agents 
+                WHERE a_name = '{}';""".format(a_name))
 
+            cur.execute("""
+                DELETE FROM kda
+                WHERE
+                    kda_agentkey IN (
+                        SELECT kda_agentkey
+                        FROM kda, agents
+                        WHERE
+                            kda_agentkey = a_agentkey AND
+                            a_name = '{}');""".format(a_name))
+        return redirect(url_for('roles'))
+        
     return render_template('deleteA.html', form=form)
 
 @app.route('/deleteR', methods=['GET', 'POST'])
