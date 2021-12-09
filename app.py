@@ -252,17 +252,22 @@ def insertAgent():
         with sqlite3.connect(db_path) as conn:
             cur = conn.cursor()
 
-            insagent =  """INSERT INTO agents(a_agentkey,a_name,a_rolekey,a_originkey,a_gender,a_race) 
-                VALUES ({},'{}',{},{},'{}','{}');""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
-            cur.execute(insagent)
+            cur.execute("SELECT a_agentkey FROM agents WHERE a_agentkey = {}".format(a_agentkey))
+            msg = cur.fetchone()  
 
-            while count <= 6:
-                inskda = """INSERT INTO kda(kda_agentkey,kda_mapkey,kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr) 
-                    VALUES ({},{},0,0,0,0,0,0,0);""".format(a_agentkey, count)
-                cur.execute(inskda)
-                count += 1
-        
-        return redirect(url_for('roles'))
+            if msg:
+                return render_template('error.html', form=form)
+            else:
+                insagent =  """INSERT INTO agents(a_agentkey,a_name,a_rolekey,a_originkey,a_gender,a_race) 
+                    VALUES ({},'{}',{},{},'{}','{}');""".format(a_agentkey, a_name, a_rolekey, a_originkey, a_gender, a_race)
+                cur.execute(insagent)
+
+                while count <= 6:
+                    inskda = """INSERT INTO kda(kda_agentkey,kda_mapkey,kda_kill,kda_death,kda_assist,kda_winrate,kda_atkwin,kda_defwin,kda_agentpr) 
+                        VALUES ({},{},0,0,0,0,0,0,0);""".format(a_agentkey, count)
+                    cur.execute(inskda)
+                    count += 1
+            return redirect(url_for('roles'))
     return render_template('insert.html', form=form)
 
 @app.route('/update', methods=['GET', 'POST'])
